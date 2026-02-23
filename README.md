@@ -72,5 +72,3 @@ export default defineConfig([
 ])
 ```
 "# todolist-react-app" 
-# todolist-react-app
-# todolist-react-app
