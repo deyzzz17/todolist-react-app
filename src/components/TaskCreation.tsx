@@ -2,18 +2,22 @@ import { useState } from "react";
 
 interface TaskCreationProps {
   onAddTask: (title: string, description: string) => void;
+  onClose: () => void;
 }
 
-function TaskCreation({ onAddTask }: TaskCreationProps) {
+function TaskCreation({ onAddTask, onClose }: TaskCreationProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const isInvalid = title.trim() === "";
+
   const handleCreate = () => {
-    if (title.trim() === "") return;
+    if (isInvalid) return;
     onAddTask(title, description);
     setTitle("");
     setDescription("");
   };
+  
   return (
     <>
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -21,7 +25,7 @@ function TaskCreation({ onAddTask }: TaskCreationProps) {
           <div className="p-6 border-b border-gray-100 flex justify-between items-center">
             <h3 className="text-xl font-bold text-gray-800">New Task</h3>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Title
@@ -48,11 +52,19 @@ function TaskCreation({ onAddTask }: TaskCreationProps) {
             </div>
           </div>
           <div className="p-6 bg-gray-50 flex justify-end gap-3">
-            <button className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors">
+            <button
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+              onClick={onClose}
+            >
               Cancel
             </button>
             <button
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-blue-600 font-bold rounded-lg shadow-md shadow-blue-200 transition-all"
+              disabled={isInvalid}
+              className={`px-6 py-2 font-bold rounded-lg shadow-md transition-all ${
+                isInvalid
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                  : "bg-blue-600 hover:bg-blue-700 text-blue-600 shadow-blue-200"
+              }`}
               onClick={handleCreate}
             >
               Create Task

@@ -4,6 +4,7 @@ interface TasksProps {
   index: number;
   title: string;
   description: string;
+  onDelete: () => void;
 }
 
 const useToggleTask = () => {
@@ -12,17 +13,28 @@ const useToggleTask = () => {
   return { isDone, toggle };
 };
 
-function Task({ index, title, description }: TasksProps) {
+function Task({ index, title, description, onDelete }: TasksProps) {
   const { isDone, toggle } = useToggleTask();
+
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    toggle();
+    if (e.target.checked) {
+      setTimeout(() => {
+        onDelete();
+      }, 300);
+    }
+  };
+
   return (
     <>
-      <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
+      <div
+        className={`flex items-center p-4 transition-all duration-300 hover:bg-gray-50 ${isDone ? "opacity-50" : "opacity-100"}`}
+      >
         <label className="flex items-start cursor-pointer w-full">
           <input
             type="checkbox"
             name={"task" + index}
-            checked={isDone}
-            onChange={toggle}
+            onChange={handleCheck}
             className="peer mt-1 w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
           />
           <div className="ml-4 flex flex-col flex-1">
@@ -33,7 +45,10 @@ function Task({ index, title, description }: TasksProps) {
               {description}
             </span>
           </div>
-          <button className="ml-4 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+          <button
+            className="ml-4 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={() => onDelete()}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

@@ -10,6 +10,7 @@ interface TaskData {
 interface TodolistProps {
   tasks: TaskData[];
   onAddTask: (title: string, description: string) => void;
+  onDeleteTask: (index: number) => void;
 }
 
 const useCreateTask = () => {
@@ -18,7 +19,7 @@ const useCreateTask = () => {
   return { isCreate, create };
 };
 
-function Todolist({ tasks, onAddTask }: TodolistProps) {
+function Todolist({ tasks, onAddTask, onDeleteTask }: TodolistProps) {
   const { isCreate, create } = useCreateTask();
   return (
     <>
@@ -28,20 +29,21 @@ function Todolist({ tasks, onAddTask }: TodolistProps) {
             My first todolist
           </h3>
           <div className="mb-6 w-full max-w-xs">
-            <div className="flex items-center justify-between py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:border-blue-400 transition-all cursor-pointer group w-full max-w-3xs">
-              <h4 className="font-medium text-gray-700">Add a new task</h4>
+            {isCreate && (
+              <TaskCreation
+                onAddTask={(t, d) => {
+                  onAddTask(t, d);
+                  create();
+                }}
+                onClose={create}
+              />
+            )}
+            <div className="flex items-center justify-between py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:text-blue-500 transition-all cursor-pointer group w-full max-w-3xs">
+              <h4 className="font-medium">Add a new task</h4>
               <button
                 className="p-2 bg-blue-50 text-gray-700 rounded-full hover:bg-blue-600 hover:text-blue-600 transition-all outline-none focus:outline-none"
                 onClick={create}
               >
-                {isCreate && (
-                  <TaskCreation
-                    onAddTask={(t, d) => {
-                      onAddTask(t, d);
-                      create();
-                    }}
-                  />
-                )}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -68,6 +70,7 @@ function Todolist({ tasks, onAddTask }: TodolistProps) {
                   index={index}
                   title={task.title}
                   description={task.description}
+                  onDelete={() => onDeleteTask(index)}
                 />
               </li>
             ))}
