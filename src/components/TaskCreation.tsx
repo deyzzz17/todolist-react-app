@@ -5,19 +5,31 @@ interface TaskCreationProps {
   onClose: () => void;
 }
 
-function TaskCreation({ onAddTask, onClose }: TaskCreationProps) {
+const useTaskCreation = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const isInvalid = title.trim() === "";
 
-  const handleCreate = () => {
-    if (isInvalid) return;
-    onAddTask(title, description);
+  const resetForm = () => {
     setTitle("");
     setDescription("");
   };
-  
+
+  return { title, description, isInvalid, setTitle, setDescription, resetForm };
+};
+
+function TaskCreation({ onAddTask, onClose }: TaskCreationProps) {
+  const { title, description, isInvalid, setTitle, setDescription, resetForm } =
+    useTaskCreation();
+
+  const handleCreate = () => {
+    if (isInvalid) return;
+    onAddTask(title, description);
+    resetForm();
+    onClose();
+  };
+
   return (
     <>
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">

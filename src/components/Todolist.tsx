@@ -7,11 +7,27 @@ interface TaskData {
   description: string;
 }
 
-interface TodolistProps {
-  tasks: TaskData[];
-  onAddTask: (title: string, description: string) => void;
-  onDeleteTask: (index: number) => void;
-}
+const useTodoLogic = () => {
+  const [tasks, setTasks] = useState<TaskData[]>([]);
+
+  const handleAddTask = (title: string, description: string) => {
+    const newTask = { title, description };
+    setTasks([...tasks, newTask]);
+  };
+
+  const handleDeleteTask = (indexToDelete: number) => {
+    const updatedTasks = tasks.filter(
+      (_, currentIndex) => currentIndex !== indexToDelete,
+    );
+    setTasks(updatedTasks);
+  };
+
+  return {
+    tasks,
+    handleAddTask,
+    handleDeleteTask,
+  };
+};
 
 const useCreateTask = () => {
   const [isCreate, setIsCreate] = useState(false);
@@ -19,7 +35,8 @@ const useCreateTask = () => {
   return { isCreate, create };
 };
 
-function Todolist({ tasks, onAddTask, onDeleteTask }: TodolistProps) {
+function Todolist() {
+  const { tasks, handleAddTask, handleDeleteTask } = useTodoLogic();
   const { isCreate, create } = useCreateTask();
   return (
     <>
@@ -32,7 +49,7 @@ function Todolist({ tasks, onAddTask, onDeleteTask }: TodolistProps) {
             {isCreate && (
               <TaskCreation
                 onAddTask={(t, d) => {
-                  onAddTask(t, d);
+                  handleAddTask(t, d);
                   create();
                 }}
                 onClose={create}
@@ -70,7 +87,7 @@ function Todolist({ tasks, onAddTask, onDeleteTask }: TodolistProps) {
                   index={index}
                   title={task.title}
                   description={task.description}
-                  onDelete={() => onDeleteTask(index)}
+                  onDelete={() => handleDeleteTask(index)}
                 />
               </li>
             ))}
