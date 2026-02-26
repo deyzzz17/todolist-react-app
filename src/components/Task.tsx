@@ -1,23 +1,29 @@
-import { useState } from "react";
+import { useToggleTask } from "../hooks/tasks";
 
 interface TasksProps {
   index: number;
   title: string;
   description: string;
+  status: "active" | "completed";
   onDelete: () => void;
+  onToggleStatus: () => void;
 }
 
-const useToggleTask = () => {
-  const [isDone, setIsDone] = useState(false);
-  const toggle = () => setIsDone(!isDone);
-  return { isDone, toggle };
-};
-
-function Task({ index, title, description, onDelete }: TasksProps) {
+function Task({
+  index,
+  title,
+  description,
+  status,
+  onDelete,
+  onToggleStatus,
+}: TasksProps) {
   const { isDone, toggle } = useToggleTask();
+
+  const isCompleted = status === "completed";
 
   const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     toggle();
+    onToggleStatus();
     if (e.target.checked) {
       setTimeout(() => {
         onDelete();
@@ -34,6 +40,7 @@ function Task({ index, title, description, onDelete }: TasksProps) {
           <input
             type="checkbox"
             name={"task" + index}
+            checked={isCompleted}
             onChange={handleCheck}
             className="peer mt-1 w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
           />
@@ -47,7 +54,7 @@ function Task({ index, title, description, onDelete }: TasksProps) {
           </div>
           <button
             className="ml-4 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-            onClick={() => onDelete()}
+            onClick={onDelete}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

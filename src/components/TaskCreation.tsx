@@ -1,34 +1,60 @@
-import { useState } from "react";
+import { useTaskCreation } from "../hooks/tasks";
+import { useManageForm } from "../hooks/tasks";
 
 interface TaskCreationProps {
-  onAddTask: (title: string, description: string) => void;
-  onClose: () => void;
+  onAddTask: (
+    title: string,
+    description: string,
+    status: "active" | "completed",
+  ) => void;
 }
 
-const useTaskCreation = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-
-  const isInvalid = title.trim() === "";
-
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-  };
-
-  return { title, description, isInvalid, setTitle, setDescription, resetForm };
-};
-
-function TaskCreation({ onAddTask, onClose }: TaskCreationProps) {
+function TaskCreation({ onAddTask }: TaskCreationProps) {
   const { title, description, isInvalid, setTitle, setDescription, resetForm } =
     useTaskCreation();
 
+  const { isOpen, open, close } = useManageForm();
+
   const handleCreate = () => {
     if (isInvalid) return;
-    onAddTask(title, description);
+    onAddTask(title, description, "active");
     resetForm();
-    onClose();
+    close();
   };
+
+  const handleCancel = () => {
+    resetForm();
+    close();
+  };
+
+  if (!isOpen) {
+    return (
+      <>
+        <div className="flex items-center justify-between py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:text-blue-500 transition-all cursor-pointer group w-full max-w-3xs">
+          <h4 className="font-medium">Add a new task</h4>
+          <button
+            className="p-2 bg-blue-50 text-gray-700 rounded-full hover:bg-blue-600 hover:text-blue-600 transition-all outline-none focus:outline-none"
+            onClick={open}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </button>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -66,7 +92,7 @@ function TaskCreation({ onAddTask, onClose }: TaskCreationProps) {
           <div className="p-6 bg-gray-50 flex justify-end gap-3">
             <button
               className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
-              onClick={onClose}
+              onClick={handleCancel}
             >
               Cancel
             </button>
