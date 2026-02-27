@@ -1,9 +1,9 @@
 import Task from "./Task";
 import TaskCreation from "./TaskCreation";
-import { useTask } from "../hooks/todolist";
+import { useTasks } from "../hooks/todolist";
 
 function Todolist() {
-  const { tasks, createTask, deleteTask, completeTask } = useTask();
+  const { tasks, createTask, deleteTask, completeTask } = useTasks();
 
   return (
     <>
@@ -13,11 +13,7 @@ function Todolist() {
             My first todolist
           </h3>
           <div className="mb-6 w-full max-w-xs">
-            <TaskCreation
-              onAddTask={(i, t, d, s) => {
-                createTask(i, t, d, s);
-              }}
-            />
+            <TaskCreation onAddTask={createTask} />
           </div>
         </div>
         <div className="w-full max-w-4xl mx-auto border border-gray-200 rounded-lg overflow-hidden shadow-sm">

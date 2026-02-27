@@ -1,15 +1,15 @@
 import { useState } from "react";
 
-interface TaskData {
+type Task = {
   id: string;
   title: string;
   description: string;
   status: "active" | "completed";
-}
+};
 
-export const useStockageTask = () => {
-  const getStoredTasks = (): TaskData[] => {
-    const savedTasks: TaskData[] = [];
+export const useTaskStorage = () => {
+  const getStoredTasks = (): Task[] => {
+    const savedTasks: Task[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key) {
@@ -22,20 +22,20 @@ export const useStockageTask = () => {
     return savedTasks;
   };
 
-  const saveTask = (task: TaskData) => {
+  const saveTask = (task: Task) => {
     localStorage.setItem(task.id, JSON.stringify(task));
   };
 
-  const removeTask = (task: TaskData) => {
+  const removeTask = (task: Task) => {
     localStorage.removeItem(task.id);
   };
 
   return { getStoredTasks, saveTask, removeTask };
 };
 
-export const useTask = () => {
-  const { getStoredTasks, saveTask, removeTask } = useStockageTask();
-  const [tasks, setTasks] = useState<TaskData[]>(() => getStoredTasks());
+export const useTasks = () => {
+  const { getStoredTasks, saveTask, removeTask } = useTaskStorage();
+  const [tasks, setTasks] = useState<Task[]>(() => getStoredTasks());
 
   const createTask = (
     id: string,
@@ -57,7 +57,7 @@ export const useTask = () => {
   };
 
   const completeTask = (indexToToggle: number) => {
-    const updateTask: TaskData[] = tasks.map((task, index) => {
+    const updateTask: Task[] = tasks.map((task, index) => {
       if (index === indexToToggle) {
         return {
           ...task,
