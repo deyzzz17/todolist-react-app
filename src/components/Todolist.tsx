@@ -4,6 +4,7 @@ import { useTask } from "../hooks/todolist";
 
 function Todolist() {
   const { tasks, createTask, deleteTask, completeTask } = useTask();
+
   return (
     <>
       <div className="p-8">
@@ -13,8 +14,8 @@ function Todolist() {
           </h3>
           <div className="mb-6 w-full max-w-xs">
             <TaskCreation
-              onAddTask={(t, d, s) => {
-                createTask(t, d, s);
+              onAddTask={(i, t, d, s) => {
+                createTask(i, t, d, s);
               }}
             />
           </div>

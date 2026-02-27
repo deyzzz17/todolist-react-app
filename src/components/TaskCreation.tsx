@@ -3,6 +3,7 @@ import { useManageForm } from "../hooks/tasks";
 
 interface TaskCreationProps {
   onAddTask: (
+    id: string,
     title: string,
     description: string,
     status: "active" | "completed",
@@ -17,7 +18,7 @@ function TaskCreation({ onAddTask }: TaskCreationProps) {
 
   const handleCreate = () => {
     if (isInvalid) return;
-    onAddTask(title, description, "active");
+    onAddTask(crypto.randomUUID(), title, description, "active");
     resetForm();
     close();
   };
