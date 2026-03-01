@@ -1,74 +1,100 @@
-# React + TypeScript + Vite
+# Todo List – React + TypeScript
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimal single-page Todo application built with React, Vite and TypeScript.  
+This application allows users to create, complete and delete tasks, with data persisted in the browser using localStorage.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## React Compiler
+This is a lightweight browser-based Todo application featuring:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Task creation via a form
+- Required title field
+- Optional description field
+- Task completion toggle
+- Task deletion
+- Persistent storage using the browser's localStorage
 
-## Expanding the ESLint configuration
+The application is currently built as a single-page interface.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Create tasks with:
+  - Required title
+  - Optional description
+- Mark tasks as completed
+- Delete tasks
+- Persistent data using `localStorage`
+- Clean UI built with Tailwind CSS
+- Icons powered by Heroicons
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Planned Improvements
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- UI/UX refinements
+- Introduction of three separate lists:
+  - Active tasks (Todo)
+  - Completed tasks
+  - Trash
+- Automatic task transitions:
+  - When completed → moves from Todo to Completed
+  - When unchecked → moves back to Todo
+  - When deleted → moves to Trash
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-"# todolist-react-app" 
+## Tech Stack
+
+- React
+- Vite
+- TypeScript
+- Tailwind CSS
+- Heroicons
+- localStorage (browser persistence)
+- npm (package manager)
+
+---
+
+## Project Structure
+
+The application uses local storage only (no backend), so the `src` folder contains only:
+
+src/
+  components/
+  hook/
+    tasks/
+    todolist/
+
+---
+
+### Hooks Architecture
+
+- `tasks/index.ts`  
+  Contains custom hooks related to task logic and task-level behavior.
+
+- `todoList/index.ts`  
+  Contains custom hooks managing the todo list logic.
+
+This separation keeps business logic isolated from UI components and ensures maintainability.
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd <project-folder>
+
+Install dependencies: 
+npm install
+
+
+
+
+
+
+
