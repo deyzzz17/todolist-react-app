@@ -91,14 +91,16 @@ cd <project-folder>
 ```
 
 Install dependencies: 
-```npm install
+```bash 
+npm install
 ```
 
 ---
 
 ## Run in development 
 
-```npm run dev
+```bash 
+npm run dev
 ```
 The application will be available at the local development URL provided by Vite.
 
