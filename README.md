@@ -88,13 +88,33 @@ Clone the repository:
 ```bash
 git clone <repository-url>
 cd <project-folder>
+```
 
 Install dependencies: 
-npm install
+```npm install
+```
 
+---
 
+## Run in development 
 
+```npm run dev
+```
+The application will be available at the local development URL provided by Vite.
 
+--- 
 
+## Data Persistence 
+
+All tasks are stored in the browser using localStorage.
+No backend or external API is used.
+
+Data remains available after page refresh but is specific to the browser.
+
+---
+
+### Author
+
+Sophie Wodey
 
 
