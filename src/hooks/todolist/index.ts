@@ -26,16 +26,22 @@ export const useTaskStorage = () => {
     localStorage.setItem(task.id, JSON.stringify(task));
   };
 
-  const removeTask = (task: Task) => {
-    localStorage.removeItem(task.id);
-  };
+  // const removeTask = (task: Task) => {
+  //   localStorage.removeItem(task.id);
+  // };
 
-  return { getStoredTasks, saveTask, removeTask };
+  return { getStoredTasks, saveTask };
 };
 
 export const useTasks = () => {
-  const { getStoredTasks, saveTask, removeTask } = useTaskStorage();
-  const [tasks, setTasks] = useState<Task[]>(() => getStoredTasks());
+  const { getStoredTasks, saveTask } = useTaskStorage();
+  const [tasks, setTasks] = useState<Task[]>(() =>
+    getStoredTasks().filter((t) => t.status === "active"),
+  );
+  const [achievedTasks, setAchievedTasks] = useState<Task[]>(() =>
+    getStoredTasks().filter((t) => t.status === "completed"),
+  );
+  //const [trashedTasks, setTrashedTasks] = useState<Task[]>([]);
 
   const createTask = (
     id: string,
@@ -48,32 +54,47 @@ export const useTasks = () => {
     saveTask(newTask);
   };
 
-  const deleteTask = (indexToDelete: number) => {
-    const updatedTasks = tasks.filter(
-      (_, currentIndex) => currentIndex !== indexToDelete,
-    );
-    setTasks(updatedTasks);
-    removeTask(tasks[indexToDelete]);
+  const deleteTask = (taskId: string) => {
+    const taskToComplete = tasks.find((t) => t.id === taskId);
+    const taskToUncomplete = achievedTasks.find((t) => t.id === taskId);
+
+    if (taskToComplete) {
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    }
+
+    if (taskToUncomplete) {
+      setAchievedTasks((prev) => prev.filter((t) => t.id !== taskId));
+    }
   };
 
-  const completeTask = (indexToToggle: number) => {
-    const updateTask: Task[] = tasks.map((task, index) => {
-      if (index === indexToToggle) {
-        return {
-          ...task,
-          status: task.status === "active" ? "completed" : "active",
-        };
-      }
-      return task;
-    });
-    setTasks(updateTask);
-    removeTask(tasks[indexToToggle]);
+  const completeTask = (taskId: string) => {
+    const taskToComplete = tasks.find((t) => t.id === taskId);
+
+    if (taskToComplete) {
+      const updatedTask: Task = { ...taskToComplete, status: "completed" };
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setAchievedTasks((prev) => [...prev, updatedTask]);
+      saveTask(updatedTask);
+    }
+  };
+
+  const toggleUncompleted = (taskId: string) => {
+    const taskToUncomplete = achievedTasks.find((t) => t.id === taskId);
+
+    if (taskToUncomplete) {
+      const updatedTask: Task = { ...taskToUncomplete, status: "active" };
+      setAchievedTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setTasks((prev) => [...prev, updatedTask]);
+      saveTask(updatedTask);
+    }
   };
 
   return {
     tasks,
+    achievedTasks,
     createTask,
     deleteTask,
     completeTask,
+    toggleUncompleted,
   };
 };

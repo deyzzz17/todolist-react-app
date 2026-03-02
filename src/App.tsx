@@ -1,4 +1,7 @@
 import Todolist from "./components/Todolist";
+import AchievedList from "./components/AchievedList";
+import Trash from "./components/Trash";
+import { TaskProvider } from "./contexts/TaskProvider";
 
 function App() {
   return (
@@ -9,11 +12,19 @@ function App() {
         </h1>
         <div className="mt-8 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent"></div>
       </header>
-      <main className="w-full flex justify-center">
-        <div className="w-full max-w-2xl">
-          <Todolist />
-        </div>
-      </main>
+      <TaskProvider>
+        <main className="w-full flex justify-center">
+          <div className="w-full max-w-2xl">
+            <Todolist />
+          </div>
+          <div className="w-full max-w-2xl">
+            <AchievedList />
+          </div>
+          <div className="w-full max-w-2xl">
+            <Trash />
+          </div>
+        </main>
+      </TaskProvider>
     </div>
   );
 }
