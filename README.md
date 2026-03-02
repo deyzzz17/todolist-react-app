@@ -62,6 +62,7 @@ The application is currently built as a single-page interface.
 The application uses local storage only (no backend), so the `src` folder contains only:
 
 src/
+  assets/
   components/
   hook/
     tasks/
