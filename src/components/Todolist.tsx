@@ -19,7 +19,7 @@ function Todolist() {
         <div className="w-full max-w-4xl mx-auto border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <ul className="flex-col divide-y divide-gray-100">
             {tasks.map((task, index) => (
-              <li key={index}>
+              <li key={task.id}>
                 <Task
                   index={index}
                   title={task.title}

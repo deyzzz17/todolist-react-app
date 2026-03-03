@@ -11,13 +11,24 @@ interface TaskCreationProps {
 }
 
 function TaskCreation({ onAddTask }: TaskCreationProps) {
-  const { title, description, isInvalid, setTitle, setDescription, resetForm } =
-    useTaskCreation();
+  const {
+    title,
+    description,
+    isInvalid,
+    setTitle,
+    setDescription,
+    resetForm,
+    showError,
+    triggerError,
+  } = useTaskCreation();
 
   const { isOpen, open, close } = useManageForm();
 
   const handleCreate = () => {
-    if (isInvalid) return;
+    if (isInvalid) {
+      triggerError();
+      return;
+    }
     onAddTask(crypto.randomUUID(), title, description, "active");
     resetForm();
     close();
@@ -31,28 +42,32 @@ function TaskCreation({ onAddTask }: TaskCreationProps) {
   if (!isOpen) {
     return (
       <>
-        <div className="flex items-center justify-between py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:text-blue-500 transition-all cursor-pointer group w-full max-w-3xs">
-          <h4 className="font-medium">Add a new task</h4>
-          <button
-            className="p-2 bg-blue-50 text-gray-700 rounded-full hover:bg-blue-600 hover:text-blue-600 transition-all outline-none focus:outline-none"
-            onClick={open}
-          >
+        <button
+          onClick={open}
+          className="flex items-center justify-between py-3 px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group w-full max-w-50 outline-none focus:ring-2 focus:ring-blue-500/20"
+        >
+          <span className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
+            Add a new task
+          </span>
+
+          <div className="p-1.5 bg-blue-50 text-blue-600 rounded-full group-hover:bg-blue-600 group-hover:text-white transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth="1.5"
+              strokeWidth="2"
               stroke="currentColor"
-              className="size-6"
+              className="size-5"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                strokeMiterlimit="10"
                 d="M12 4.5v15m7.5-7.5h-15"
               />
             </svg>
-          </button>
-        </div>
+          </div>
+        </button>
       </>
     );
   }
@@ -69,12 +84,21 @@ function TaskCreation({ onAddTask }: TaskCreationProps) {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Title
               </label>
+              {showError && (
+                <p className="text-red-500 text-sm mb-1 font-medium">
+                  Title is required
+                </p>
+              )}
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="What needs to be done?"
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent outline-none transition-all ${
+                  showError
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-200 focus:ring-blue-500"
+                }`}
               />
             </div>
             <div>
@@ -98,7 +122,6 @@ function TaskCreation({ onAddTask }: TaskCreationProps) {
               Cancel
             </button>
             <button
-              disabled={isInvalid}
               className={`px-6 py-2 font-bold rounded-lg shadow-md transition-all ${
                 isInvalid
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"

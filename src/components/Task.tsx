@@ -37,18 +37,50 @@ function Task({
         className={`flex items-center p-4 transition-all duration-300 hover:bg-gray-50 ${isDone ? "opacity-50" : "opacity-100"}`}
       >
         <label className="flex items-start cursor-pointer w-full">
-          <input
-            type="checkbox"
-            name={"task" + index}
-            checked={isCompleted}
-            onChange={handleCheck}
-            className="peer mt-1 w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
+          <div className="relative flex items-center justify-center">
+            <input
+              type="checkbox"
+              name={"task" + index}
+              checked={isCompleted}
+              onChange={handleCheck}
+              className={`
+                        appearance-none w-6 h-6 rounded-full border-2 cursor-pointer
+                        transition-all duration-200 ease-in-out
+                        ${
+                          isCompleted
+                            ? "bg-blue-500 border-blue-500"
+                            : "bg-white border-gray-300 group-hover:border-blue-400"
+                        }
+                      `}
+            />
+            {isCompleted && (
+              <svg
+                className="absolute w-3.5 h-3.5 text-white pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            )}
+          </div>
           <div className="ml-4 flex flex-col flex-1">
-            <span className="font-bold text-gray-800 peer-checked:line-through peer-checked:text-gray-400">
+            <span
+              className={`font-bold transition-all ${
+                isCompleted ? "text-gray-400 line-through" : "text-gray-800"
+              }`}
+            >
               {title}
             </span>
-            <span className="text-sm text-gray-500 peer-checked:text-gray-300">
+            <span
+              className={`text-sm transition-all ${
+                isCompleted ? "text-gray-300" : "text-gray-500"
+              }`}
+            >
               {description}
             </span>
           </div>
