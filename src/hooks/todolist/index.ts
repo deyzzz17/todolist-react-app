@@ -4,7 +4,7 @@ type Task = {
   id: string;
   title: string;
   description: string;
-  status: "active" | "completed";
+  status: "active" | "completed" | "deleted";
 };
 
 export const useTaskStorage = () => {
@@ -26,22 +26,24 @@ export const useTaskStorage = () => {
     localStorage.setItem(task.id, JSON.stringify(task));
   };
 
-  // const removeTask = (task: Task) => {
-  //   localStorage.removeItem(task.id);
-  // };
+  const removeTask = (task: Task) => {
+    localStorage.removeItem(task.id);
+  };
 
-  return { getStoredTasks, saveTask };
+  return { getStoredTasks, saveTask, removeTask };
 };
 
 export const useTasks = () => {
-  const { getStoredTasks, saveTask } = useTaskStorage();
+  const { getStoredTasks, saveTask, removeTask } = useTaskStorage();
   const [tasks, setTasks] = useState<Task[]>(() =>
     getStoredTasks().filter((t) => t.status === "active"),
   );
   const [achievedTasks, setAchievedTasks] = useState<Task[]>(() =>
     getStoredTasks().filter((t) => t.status === "completed"),
   );
-  //const [trashedTasks, setTrashedTasks] = useState<Task[]>([]);
+  const [trashedTasks, setTrashedTasks] = useState<Task[]>(() =>
+    getStoredTasks().filter((t) => t.status === "deleted"),
+  );
 
   const createTask = (
     id: string,
@@ -54,16 +56,22 @@ export const useTasks = () => {
     saveTask(newTask);
   };
 
-  const deleteTask = (taskId: string) => {
+  const softDeleteTask = (taskId: string) => {
     const taskToComplete = tasks.find((t) => t.id === taskId);
     const taskToUncomplete = achievedTasks.find((t) => t.id === taskId);
 
     if (taskToComplete) {
+      const updatedTask: Task = { ...taskToComplete, status: "deleted" };
       setTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setTrashedTasks((prev) => [...prev, updatedTask]);
+      saveTask(updatedTask);
     }
 
     if (taskToUncomplete) {
+      const updatedTask: Task = { ...taskToUncomplete, status: "deleted" };
       setAchievedTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setTrashedTasks((prev) => [...prev, updatedTask]);
+      saveTask(updatedTask);
     }
   };
 
@@ -89,12 +97,35 @@ export const useTasks = () => {
     }
   };
 
+  const restoreTask = (taskId: string) => {
+    const taskToRestore = trashedTasks.find((t) => t.id === taskId);
+
+    if (taskToRestore) {
+      const updatedTask: Task = { ...taskToRestore, status: "active" };
+      setTrashedTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setTasks((prev) => [...prev, updatedTask]);
+      saveTask(updatedTask);
+    }
+  };
+
+  const deleteTask = (taskId: string) => {
+    const taskToDelete = trashedTasks.find((t) => t.id === taskId);
+
+    if (taskToDelete) {
+      setTrashedTasks((prev) => prev.filter((t) => t.id !== taskId));
+      removeTask(taskToDelete);
+    }
+  };
+
   return {
     tasks,
     achievedTasks,
+    trashedTasks,
     createTask,
-    deleteTask,
+    softDeleteTask,
     completeTask,
     toggleUncompleted,
+    restoreTask,
+    deleteTask,
   };
 };

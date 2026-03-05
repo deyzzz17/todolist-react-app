@@ -1,12 +1,13 @@
 import Todolist from "./components/Todolist";
 import AchievedList from "./components/AchievedList";
+import Trash from "./components/Trash";
 import { TaskProvider } from "./contexts/TaskProvider";
 
 function App() {
   return (
     <div className="min-h-screen w-screen bg-neutral-50 flex flex-col font-sans">
       <header className="w-full bg-white border-b border-neutral-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-400 mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 bg-neutral-900 rounded-md flex items-center justify-center shadow-sm">
               <svg
@@ -28,26 +29,26 @@ function App() {
         </div>
       </header>
       <TaskProvider>
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="max-w-2xl">
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-gray-950 to-gray-500 pb-1">
-                Dashboard
-              </h1>
-              <p className="text-lg text-neutral-500 font-medium mt-2 tracking-tight">
-                Manage your workspace and track your progress.
-              </p>
-            </div>
+        <main className="flex-1 w-full max-w-400 mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="mb-10 max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-gray-950 to-gray-500 pb-1">
+              Dashboard
+            </h1>
+            <p className="text-lg text-neutral-500 font-medium mt-2 tracking-tight">
+              Manage your workspace and track your progress.
+            </p>
           </div>
-          <div className="w-full bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden flex flex-col lg:flex-row">
-            <div className="w-full lg:w-1/2 p-6 lg:p-8">
+          <div className="w-full bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-neutral-200">
+            <div className="p-6 lg:p-10">
               <Todolist />
             </div>
 
-            <div className="w-full lg:w-px h-px lg:h-auto bg-neutral-200"></div>
-
-            <div className="w-full lg:w-1/2 p-6 lg:p-8 bg-neutral-50/50">
+            <div className="p-6 lg:p-10 bg-neutral-50/30">
               <AchievedList />
+            </div>
+
+            <div className="p-6 lg:p-10 bg-neutral-50">
+              <Trash />
             </div>
           </div>
         </main>

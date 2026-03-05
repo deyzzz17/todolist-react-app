@@ -2,7 +2,7 @@ import Task from "./Task";
 import { useTaskContext } from "../contexts/TaskContext";
 
 function AchievedList() {
-  const { achievedTasks, deleteTask, toggleUncompleted } = useTaskContext();
+  const { achievedTasks, softDeleteTask, toggleUncompleted } = useTaskContext();
 
   return (
     <>
@@ -21,7 +21,7 @@ function AchievedList() {
                   title={task.title}
                   description={task.description}
                   status={task.status}
-                  onDelete={() => deleteTask(task.id)}
+                  onDelete={() => softDeleteTask(task.id)}
                   onToggleStatus={() => toggleUncompleted(task.id)}
                 />
               </li>

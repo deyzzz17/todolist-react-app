@@ -3,7 +3,7 @@ import TaskCreation from "./TaskCreation";
 import { useTaskContext } from "../contexts/TaskContext";
 
 function Todolist() {
-  const { tasks, createTask, deleteTask, completeTask } = useTaskContext();
+  const { tasks, createTask, softDeleteTask, completeTask } = useTaskContext();
 
   return (
     <>
@@ -25,7 +25,7 @@ function Todolist() {
                   title={task.title}
                   description={task.description}
                   status={task.status}
-                  onDelete={() => deleteTask(task.id)}
+                  onDelete={() => softDeleteTask(task.id)}
                   onToggleStatus={() => completeTask(task.id)}
                 />
               </li>

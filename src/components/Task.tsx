@@ -4,7 +4,7 @@ interface TasksProps {
   index: number;
   title: string;
   description: string;
-  status: "active" | "completed";
+  status: "active" | "completed" | "deleted";
   onDelete: () => void;
   onToggleStatus: () => void;
 }
@@ -21,14 +21,11 @@ function Task({
 
   const isCompleted = status === "completed";
 
-  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const isDeleted = status === "deleted";
+
+  const handleCheck = () => {
     toggle();
     onToggleStatus();
-    if (e.target.checked) {
-      setTimeout(() => {
-        onDelete();
-      }, 300);
-    }
   };
 
   return (
@@ -41,6 +38,7 @@ function Task({
             <input
               type="checkbox"
               name={"task" + index}
+              disabled={isDeleted}
               checked={isCompleted}
               onChange={handleCheck}
               className={`
@@ -71,28 +69,57 @@ function Task({
           <div className="ml-4 flex flex-col flex-1">
             <span
               className={`font-bold transition-all ${
-                isCompleted ? "text-gray-400 line-through" : "text-gray-800"
+                isDeleted
+                  ? "text-gray-400"
+                  : isCompleted
+                    ? "text-gray-300 line-through"
+                    : "text-gray-800"
               }`}
             >
               {title}
             </span>
             <span
               className={`text-sm transition-all ${
-                isCompleted ? "text-gray-300" : "text-gray-500"
+                isDeleted
+                  ? "text-gray-300"
+                  : isCompleted
+                    ? "text-gray-200"
+                    : "text-gray-500"
               }`}
             >
               {description}
             </span>
           </div>
+          {isDeleted && (
+            <button
+              className="group ml-4 p-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors"
+              onClick={onToggleStatus}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-6 transition-transform duration-500 ease-in-out group-hover:rotate-180"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
+              </svg>
+            </button>
+          )}
           <button
-            className="ml-4 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="ml-4 p-2 text-gray-600 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             onClick={onDelete}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
               className="size-6"
             >
