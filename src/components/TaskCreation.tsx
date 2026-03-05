@@ -6,7 +6,7 @@ interface TaskCreationProps {
     id: string,
     title: string,
     description: string,
-    status: "active" | "completed",
+    status: "active",
   ) => void;
 }
 
